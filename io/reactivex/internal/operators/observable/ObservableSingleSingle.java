@@ -1,0 +1,140 @@
+package io.reactivex.internal.operators.observable;
+
+/* loaded from: classes.dex */
+public final class ObservableSingleSingle<T> extends io.reactivex.Single<T> {
+    final T defaultValue;
+    final io.reactivex.ObservableSource<? extends T> source;
+
+    static final class SingleElementObserver<T> implements io.reactivex.Observer<T>, io.reactivex.disposables.Disposable {
+        final io.reactivex.SingleObserver<? super T> actual;
+        final T defaultValue;
+        boolean done;
+
+        /* renamed from: s */
+        io.reactivex.disposables.Disposable f445s;
+        T value;
+
+        SingleElementObserver(io.reactivex.SingleObserver<? super T> r1, T r2) {
+                r0 = this;
+                r0.<init>()
+                r0.actual = r1
+                r0.defaultValue = r2
+                return
+        }
+
+        @Override // io.reactivex.disposables.Disposable
+        public void dispose() {
+                r1 = this;
+                io.reactivex.disposables.Disposable r0 = r1.f445s
+                r0.dispose()
+                return
+        }
+
+        @Override // io.reactivex.disposables.Disposable
+        public boolean isDisposed() {
+                r1 = this;
+                io.reactivex.disposables.Disposable r0 = r1.f445s
+                boolean r0 = r0.isDisposed()
+                return r0
+        }
+
+        @Override // io.reactivex.Observer
+        public void onComplete() {
+                r2 = this;
+                boolean r0 = r2.done
+                if (r0 == 0) goto L5
+                return
+            L5:
+                r0 = 1
+                r2.done = r0
+                T r0 = r2.value
+                r1 = 0
+                r2.value = r1
+                if (r0 != 0) goto L11
+                T r0 = r2.defaultValue
+            L11:
+                if (r0 == 0) goto L19
+                io.reactivex.SingleObserver<? super T> r1 = r2.actual
+                r1.onSuccess(r0)
+                goto L23
+            L19:
+                io.reactivex.SingleObserver<? super T> r0 = r2.actual
+                java.util.NoSuchElementException r1 = new java.util.NoSuchElementException
+                r1.<init>()
+                r0.onError(r1)
+            L23:
+                return
+        }
+
+        @Override // io.reactivex.Observer
+        public void onError(java.lang.Throwable r2) {
+                r1 = this;
+                boolean r0 = r1.done
+                if (r0 == 0) goto L8
+                io.reactivex.plugins.RxJavaPlugins.onError(r2)
+                return
+            L8:
+                r0 = 1
+                r1.done = r0
+                io.reactivex.SingleObserver<? super T> r0 = r1.actual
+                r0.onError(r2)
+                return
+        }
+
+        @Override // io.reactivex.Observer
+        public void onNext(T r3) {
+                r2 = this;
+                boolean r0 = r2.done
+                if (r0 == 0) goto L5
+                return
+            L5:
+                T r0 = r2.value
+                if (r0 == 0) goto L1e
+                r3 = 1
+                r2.done = r3
+                io.reactivex.disposables.Disposable r3 = r2.f445s
+                r3.dispose()
+                io.reactivex.SingleObserver<? super T> r3 = r2.actual
+                java.lang.IllegalArgumentException r0 = new java.lang.IllegalArgumentException
+                java.lang.String r1 = "Sequence contains more than one element!"
+                r0.<init>(r1)
+                r3.onError(r0)
+                return
+            L1e:
+                r2.value = r3
+                return
+        }
+
+        @Override // io.reactivex.Observer
+        public void onSubscribe(io.reactivex.disposables.Disposable r2) {
+                r1 = this;
+                io.reactivex.disposables.Disposable r0 = r1.f445s
+                boolean r0 = io.reactivex.internal.disposables.DisposableHelper.validate(r0, r2)
+                if (r0 == 0) goto Lf
+                r1.f445s = r2
+                io.reactivex.SingleObserver<? super T> r2 = r1.actual
+                r2.onSubscribe(r1)
+            Lf:
+                return
+        }
+    }
+
+    public ObservableSingleSingle(io.reactivex.ObservableSource<? extends T> r1, T r2) {
+            r0 = this;
+            r0.<init>()
+            r0.source = r1
+            r0.defaultValue = r2
+            return
+    }
+
+    @Override // io.reactivex.Single
+    public void subscribeActual(io.reactivex.SingleObserver<? super T> r4) {
+            r3 = this;
+            io.reactivex.ObservableSource<? extends T> r0 = r3.source
+            io.reactivex.internal.operators.observable.ObservableSingleSingle$SingleElementObserver r1 = new io.reactivex.internal.operators.observable.ObservableSingleSingle$SingleElementObserver
+            T r2 = r3.defaultValue
+            r1.<init>(r4, r2)
+            r0.subscribe(r1)
+            return
+    }
+}
